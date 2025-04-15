@@ -141,7 +141,7 @@ def join_game():
         abort(403, description="youre already in")
     if len(g.player_scores)>=5:
         abort(403, description="too many in lobby")
-    g.player_scores[userid]=0
+    g.player_scores[userid]=(0,1)
     return "Success",200
 
 @app.patch('/game/start')

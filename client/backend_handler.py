@@ -29,7 +29,7 @@ def get_games():
 #Join an existing game
 #(No return value)
 def join(game_code, userid):
-    x = requests.post(url+"game/join?game_code="+str(game_code)+"&userid="+userid)
+    x = requests.patch(url+"game/join?game_code="+str(game_code)+"&userid="+userid)
 
 #Starts game
 #Returns GameState
