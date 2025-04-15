@@ -24,7 +24,9 @@ rules_str = ["Starts with", "Must have", "Can't have", "Ends in"]
 
 
 def get_words():
-    f = open("words.txt", "r")
+    import os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    f = open(dir_path+"/words.txt", "r")
     s = f.read().lower()
     return s.split("\n")
 

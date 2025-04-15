@@ -5,13 +5,17 @@
 # Checks words are valid Scrabble words
 # Provides a score based on similarity to "Cat"
 
-# REQUIRES dictionary.json in operating directory
+# REQUIRES closeness.json in same directory
 
 import json
+import os
 
-f = open("dictionary.json", "r")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+f = open(dir_path+"/closeness.json", "r")
 dictionary = json.load(f)
 f.close()
+
+print("length is",len(dictionary))
 
 def check_word_valid(word):
     return (word.lower() in dictionary)

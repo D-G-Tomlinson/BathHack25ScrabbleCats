@@ -11,7 +11,7 @@ pygame.mixer.init()
 background_music_started = False
 
 # Screen setup
-programIcon = pygame.image.load('scrabble_cat_tile.png')
+programIcon = pygame.image.load('Resources/Images/scrabble_cat_tile.png')
 pygame.display.set_icon(programIcon)
 width, height = 640, 360
 screen = pygame.display.set_mode((width, height))
@@ -44,7 +44,7 @@ GAME_CODE_GENERATED = 2
 current_state = MAIN_MENU
 
 
-def play_background_music(music_file='kevin-macleod-hall-of-the-mountain-king.mp3'):
+def play_background_music(music_file='Resources/Audio/kevin-macleod-hall-of-the-mountain-king.mp3'):
     """
     Play background music in a loop
 
@@ -70,7 +70,7 @@ def play_background_music(music_file='kevin-macleod-hall-of-the-mountain-king.mp
 def draw_main_menu():
     play_background_music()
     # Load the title image
-    title_image = pygame.image.load("Logo.png")  # Replace "title.png" with your file name
+    title_image = pygame.image.load("Resources/Images/logo.png")  # Replace "title.png" with your file name
     title_image = pygame.transform.scale(title_image, (400, 400))  # Optional: scale the image
     title_rect = title_image.get_rect(midtop=(430, -40))  # Position the image
 
@@ -487,9 +487,8 @@ def play_rounds():
 
 
 def play_round(round, total_points=0):  # Add parameter for total points with default 0
-    import rules
-    import word_check
-    import word_check
+    import Rules.rules as rules
+    import Word_Check.word_check as word_check
     import pygame
     import time
 
@@ -672,15 +671,15 @@ def give_encouragement(points, player_score):
     # Encouragement message
     if points >= 50:
         encouragement_text = "Purrfection! You're the cat's meow!"
-        cat_image = pygame.image.load("happy_cat.png")
+        cat_image = pygame.image.load("Resources/Images/Responses/happy_cat.png")
         cat_image = pygame.transform.scale(cat_image, (170, 170))
     elif points >= 10:
         encouragement_text = "Not bad! Keep going, paws-itively awesome!"
-        cat_image = pygame.image.load("neutral_cat.png")
+        cat_image = pygame.image.load("Resources/Images/Responses/neutral_cat.png")
         cat_image = pygame.transform.scale(cat_image, (192, 148))
     else:
         encouragement_text = "Don't give up! You can do it, little kitty!"
-        cat_image = pygame.image.load("sad_cat.png")
+        cat_image = pygame.image.load("Resources/Images/Responses/sad_cat.png")
         cat_image = pygame.transform.scale(cat_image, (220, 150))
 
     # Scale image if needed
