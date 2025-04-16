@@ -8,10 +8,8 @@
 # REQUIRES closeness.json in same directory
 
 import json
-import os
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-f = open(dir_path+"/closeness.json", "r")
+f = open("Word_Check/closeness.json", "r")
 dictionary = json.load(f)
 f.close()
 

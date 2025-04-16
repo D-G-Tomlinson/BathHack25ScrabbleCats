@@ -2,7 +2,7 @@
 
 import requests
 import json
-from rules import *
+from Rules.rules import *
 
 url = "https://dgt.eu.pythonanywhere.com/"
 
@@ -28,43 +28,41 @@ def get_games():
 
 #Join an existing game
 #(No return value)
-def join(game_code, userid):
+def join(game_code, userid, game):
     x = requests.patch(url+"game/join?game_code="+str(game_code)+"&userid="+userid)
+    game.update(x.text)
 
 #Starts game
 #Returns GameState
-def start_game(game_code):
+def start_game(game_code,game):
     x = requests.patch(url+"game/start?game_code="+str(game_code))
-    return GameState(x.text)
+    game.update(x.text)
 
 #Submit guess
-def submit_guess(game_code, userid, roundid, score):
+def submit_guess(game_code, userid, roundid, score, game):
     x = requests.patch(url+"game/game_code="+str(game_code)+"&userid="+userid+"&round="+str(roundid)+"&score="+str(score))
-    return GameState(x.text)
+    game.update(x.text)
 
 #Do this every second or so to check game state
 #Returns GameState
-def check_game_state(game_code, userid):
+def check_game_state(game_code, userid, game):
     x = requests.get(url+"game/arewethereyet?game_code="+str(game_code)+"&userid="+userid)
-    return GameState(x.text)
+    game.update(x.text)
 
 #Create a new game and joins it
 #Returns game code
-def create_game(userid):
+def create_game(userid, game):
     x = requests.post(url+"game?userid="+userid)
-    j = json.loads(x.text)
-    return j["gameCode"]
+    game.update(x.text)
+    
 
 
 class GameState():
 
-    def __init__(self, json_text):
-        j = json.loads(json_text)
-        game_data = j["game_data"]
-        self.game_code = game_data["code"]
-        self.players = game_data["players"]
-        self.round = game_data["round"]
-
+    def __init__(self, json_text=None):
+        if json_text != None:
+            self.update(json_text)
+        
     #Get Game Code (int)
     def get_game_code(self):
         return self.game_code
@@ -87,7 +85,13 @@ class GameState():
     def get_list_of_players(self):
         return self.players.keys()
 
-    
+    def update(self, json_text):
+        j = json.loads(json_text)
+        game_data = j["game_data"]
+        self.game_code = game_data["code"]
+        self.players = game_data["players"]
+        self.round = game_data["round"]
+        
 
 
         

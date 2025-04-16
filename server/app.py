@@ -142,7 +142,7 @@ def join_game():
     if len(g.player_scores)>=5:
         abort(403, description="too many in lobby")
     g.player_scores[userid]=(0,1)
-    return "Success",200
+    return jsonify({"game_data":g.ready_j()}),200
 
 @app.patch('/game/start')
 def start_game():
@@ -169,6 +169,6 @@ def new_game():
     if userid == None:
         abort(400, description="no userid provided")
     ng = Game(userid)
-    code = ng.code
+    code=ng.code
     games[code]=ng
-    return jsonify({"gameCode":code}),201
+    return jsonify({"game_data":ng.ready_j()}),201
