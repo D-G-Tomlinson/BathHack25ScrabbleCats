@@ -21,7 +21,7 @@ back_button_rect = pg.Rect(10,10,100,50)
 back_button_text = BUTTON_FONT.render("Back", True, BLACK)
 back_button_text_rect = back_button_text.get_rect(center=back_button_rect.center)
 
-button_rect = pg.Rect((WIDTH-300)//2,200,300,60)
+button_rect = pg.Rect((WIDTH-300)//2,HEIGHT-110,300,60)
 button_text = BUTTON_FONT.render("Generate Join Code", True, BLACK)
 button_text_rect = button_text.get_rect(center=button_rect.center)
 
@@ -56,6 +56,9 @@ def update(game, events):
     global cursor_time
     global cursor_visible
     global username_active
+
+    if game.flicker:
+        cursor_visible = False
     
     current_time = pg.time.get_ticks()
     if current_time-cursor_time>500:

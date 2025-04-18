@@ -38,6 +38,10 @@ def join(game_code, userid, game):
         print(x.text)
         return x.text.splitlines()[4][3:-4]
 
+def leave(game_code, userid):
+    x = requests.delete(url+"game/leave?game_code="+str(game_code)+"&userid="+userid)
+    return x.status_code == 200
+    
 #Starts game
 #Returns GameState
 def start_game(game_code,game):

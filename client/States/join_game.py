@@ -23,7 +23,7 @@ username_label_rect = username_label_text.get_rect(midright=(240, 120))
 game_code_label_text = INPUT_FONT.render("Game code:", True, BLACK)
 game_code_label_rect = game_code_label_text.get_rect(midright=(240, 190))
 
-button_rect = pg.Rect((WIDTH-160)//2,240,160,60)
+button_rect = pg.Rect((WIDTH-160)//2,HEIGHT-110,300,60)
 button_text = INPUT_FONT.render("Join", True, BLACK)
 button_text_rect = button_text.get_rect(center=button_rect.center)
 
@@ -82,6 +82,9 @@ def update(game, events):
 
     global game_code_text
     global error_message
+
+    if game.flicker:
+        cursor_visible = False
 
     current_time = pg.time.get_ticks()
     if current_time-cursor_time>500:

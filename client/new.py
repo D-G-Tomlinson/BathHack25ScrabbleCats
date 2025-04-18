@@ -11,10 +11,13 @@ from Constants.constants import *
 import States.main_menu as mm
 import States.generate_game_code as ggc
 import States.join_game as jg
+import States.lobby as lb
+
 class Game:
     def __init__(self):
         self.game = GameState()
         self.userid = ""
+        self.flicker = True
 
 pg.display.set_icon(PROGRAM_ICON)
 music.load(MUSIC_FILE)
@@ -28,7 +31,8 @@ game = Game()
 
 states = {"main_menu":(mm.update,mm.draw),
           "generate_game_code":(ggc.update,ggc.draw),
-          "join_game":(jg.update,jg.draw)}
+          "join_game":(jg.update,jg.draw),
+          "lobby":(lb.update,lb.draw)}
 state = "main_menu"
 
 def update():
@@ -39,7 +43,9 @@ def update():
             pygame.quit()
             sys.exit()
     update_func = states[state][0]
-    state = update_func(game, events)
+    new_state = update_func(game, events)
+    game.flicker = new_state != state
+    state = new_state
 
 def draw():
     screen.fill(BACKGROUND_COLOUR)    

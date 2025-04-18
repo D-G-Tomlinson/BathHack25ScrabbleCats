@@ -70,7 +70,7 @@ class Game:
             self.player_scores[player]=(self.player_scores[player][0],-1)
             if self.test_all_players(-1):
                 games.pop(self.code)
-        else:
+        elif player1=None:
             abort(403, description="that player don't exist lol")
     
 def get_game(game_code):
@@ -109,6 +109,8 @@ def remove_player():
     if userid not in g.player_scores:
         abort(403, description="youre not in")
     g.player_scores.pop(userid)
+    if g.test_all_players(g.r.num+1):
+        g.next_round(None)
     if len(g.player_scores)==0:
         games.pop(g.code)
     return "Success",200
@@ -147,8 +149,11 @@ def join_game():
 @app.patch('/game/start')
 def start_game():
     g = get_game(request.args.get("game_code"))
-    g.start()
-    return jsonify({"game_data":g.ready_j()}),200
+    if g.r == None:
+        g.start()
+        return jsonify({"game_data":g.ready_j()}),200
+    else:
+        abort(403,description="Game has already started")
 
 @app.get('/game/arewethereyet')
 def get_update():
