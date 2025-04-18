@@ -29,8 +29,14 @@ def get_games():
 #Join an existing game
 #(No return value)
 def join(game_code, userid, game):
+    
     x = requests.patch(url+"game/join?game_code="+str(game_code)+"&userid="+userid)
-    game.update(x.text)
+    if x.status_code==200:
+        game.update(x.text)
+        return True
+    else:
+        print(x.text)
+        return x.text.splitlines()[4][3:-4]
 
 #Starts game
 #Returns GameState

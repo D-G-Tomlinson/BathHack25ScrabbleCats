@@ -10,7 +10,7 @@ from Constants.constants import *
 
 import States.main_menu as mm
 import States.generate_game_code as ggc
-
+import States.join_game as jg
 class Game:
     def __init__(self):
         self.game = GameState()
@@ -27,7 +27,8 @@ pg.display.set_caption(CAPTION)
 game = Game()
 
 states = {"main_menu":(mm.update,mm.draw),
-          "generate_game_code":(ggc.update,ggc.draw)}
+          "generate_game_code":(ggc.update,ggc.draw),
+          "join_game":(jg.update,jg.draw)}
 state = "main_menu"
 
 def update():
@@ -41,6 +42,7 @@ def update():
     state = update_func(game, events)
 
 def draw():
+    screen.fill(BACKGROUND_COLOUR)    
     draw_func = states[state][1]
     draw_func(game, screen)
     pg.display.flip()

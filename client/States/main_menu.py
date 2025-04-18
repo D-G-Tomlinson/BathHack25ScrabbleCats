@@ -21,9 +21,6 @@ join_button_text_rect = join_button_text.get_rect(center=join_button_rect.center
 
 
 def draw(game, screen):
-    
-    # Draw the screen
-    screen.fill(BACKGROUND_COLOUR)
     screen.blit(title_image, title_rect)
     pg.draw.rect(screen, button_color, generate_button_rect)
     screen.blit(generate_button_text, generate_button_text_rect)

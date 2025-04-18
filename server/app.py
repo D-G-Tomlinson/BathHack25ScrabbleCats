@@ -77,9 +77,9 @@ def get_game(game_code):
     try:
         game_code = int(game_code)
     except:
-        abort(403,description="thats not an integer")
+        abort(403,description="That is not an integer")
     if game_code not in games:
-        abort(403, description="that game doesn't exist")
+        abort(403, description="That game does not exist")
     return games[game_code]
     
         
@@ -136,11 +136,11 @@ def join_game():
     g = get_game(request.args.get("game_code"))
     userid = str(request.args.get("userid"))
     if g.r!=None:
-        abort(403, description="game is running")
+        abort(403, description="The game is running")
     if userid in g.player_scores:
-        abort(403, description="youre already in")
+        abort(403, description="You are already in")
     if len(g.player_scores)>=5:
-        abort(403, description="too many in lobby")
+        abort(403, description="There are too many in the lobby")
     g.player_scores[userid]=(0,1)
     return jsonify({"game_data":g.ready_j()}),200
 
