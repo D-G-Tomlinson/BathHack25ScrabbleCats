@@ -56,9 +56,6 @@ def update(game, events):
     global cursor_time
     global cursor_visible
     global username_active
-
-    if game.flicker:
-        cursor_visible = False
     
     current_time = pg.time.get_ticks()
     if current_time-cursor_time>500:
@@ -82,3 +79,12 @@ def update(game, events):
             elif event.unicode and event.unicode.isprintable():
                 game.userid += event.unicode                    
     return "generate_game_code"
+
+def init(game):
+    global cursor_visible
+    global cursor_time
+
+    cursor_visible = False
+    cursor_time = pg.time.get_ticks()
+
+functions = (update,draw,init)

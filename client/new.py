@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.mixer import music as music
-from backend_handler import GameState
+from backend_handler import GameState, leave
 # init pygame
 pg.init()
 pg.mixer.init()
@@ -12,12 +12,13 @@ import States.main_menu as mm
 import States.generate_game_code as ggc
 import States.join_game as jg
 import States.lobby as lb
+import States.make_guess as mg
 
 class Game:
     def __init__(self):
         self.game = GameState()
         self.userid = ""
-        self.flicker = True
+        self.last_score = None
 
 pg.display.set_icon(PROGRAM_ICON)
 music.load(MUSIC_FILE)
@@ -29,30 +30,34 @@ pg.display.set_caption(CAPTION)
 
 game = Game()
 
-states = {"main_menu":(mm.update,mm.draw),
-          "generate_game_code":(ggc.update,ggc.draw),
-          "join_game":(jg.update,jg.draw),
-          "lobby":(lb.update,lb.draw)}
+states = {"main_menu":mm.functions,
+          "generate_game_code":ggc.functions,
+          "join_game":jg.functions,
+          "lobby":lb.functions,
+          "make_guess":mg.functions
+          }
 state = "main_menu"
 
-def update():
-    global state
+def update(state):
     events = pg.event.get()
     for event in events:
         if event.type == pg.QUIT:
+            if game.game.in_game:
+                leave(game.game,game.userid)
             pygame.quit()
             sys.exit()
     update_func = states[state][0]
     new_state = update_func(game, events)
-    game.flicker = new_state != state
-    state = new_state
+    if new_state != state:
+        states[new_state][2](game)
+    return new_state
 
-def draw():
+def draw(state):
     screen.fill(BACKGROUND_COLOUR)    
     draw_func = states[state][1]
     draw_func(game, screen)
     pg.display.flip()
 
 while True:
-    update()
-    draw()
+    state = update(state)
+    draw(state)

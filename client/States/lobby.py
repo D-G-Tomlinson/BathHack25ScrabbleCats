@@ -62,3 +62,6 @@ def update(game, events):
             start_game(game.game.game_code,game.game)
             return "make_guess"
     return "lobby"
+def init(game):
+    pass
+functions = (update,draw,init)

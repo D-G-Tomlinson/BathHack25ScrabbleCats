@@ -83,9 +83,6 @@ def update(game, events):
     global game_code_text
     global error_message
 
-    if game.flicker:
-        cursor_visible = False
-
     current_time = pg.time.get_ticks()
     if current_time-cursor_time>500:
         cursor_visible = not cursor_visible
@@ -139,3 +136,12 @@ def update(game, events):
             
     
     return "join_game"
+
+def init(game):
+    global cursor_visible
+    global cursor_time
+
+    cursor_visible = False
+    cursor_time = pg.time.get_ticks()
+
+functions = (update,draw,init)

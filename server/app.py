@@ -20,7 +20,7 @@ class Round:
     def finish(self):
         self.finished=datetime.datetime.now()
     def ready_j(self):
-        fin = self.finished != None
+        fin = (self.finished != None)
         return {"rule":self.rule,"num":self.num,"length":Round.length,"finished":fin}
 
 games = {}
@@ -68,9 +68,9 @@ class Game:
     def player_finished(self,player):
         if player in self.player_scores:
             self.player_scores[player]=(self.player_scores[player][0],-1)
-            if self.test_all_players(-1):
-                games.pop(self.code)
-        elif player1=None:
+        if self.test_all_players(-1):
+            games.pop(self.code)
+        if player != None:
             abort(403, description="that player don't exist lol")
     
 def get_game(game_code):
@@ -107,7 +107,7 @@ def remove_player():
     g = get_game(request.args.get("game_code"))
     userid = str(request.args.get("userid"))
     if userid not in g.player_scores:
-        abort(403, description="youre not in")
+        abort(403, description="you are not in")
     g.player_scores.pop(userid)
     if g.test_all_players(g.r.num+1):
         g.next_round(None)

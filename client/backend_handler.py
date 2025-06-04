@@ -28,7 +28,7 @@ def get_games():
 
 #Join an existing game
 #(No return value)
-def join(game_code, userid, game):
+def join(game_code, userid,game):
     
     x = requests.patch(url+"game/join?game_code="+str(game_code)+"&userid="+userid)
     if x.status_code==200:
@@ -38,8 +38,9 @@ def join(game_code, userid, game):
         print(x.text)
         return x.text.splitlines()[4][3:-4]
 
-def leave(game_code, userid):
-    x = requests.delete(url+"game/leave?game_code="+str(game_code)+"&userid="+userid)
+def leave(game, userid):
+    x = requests.delete(url+"game/leave?game_code="+str(game.game_code)+"&userid="+userid)
+    game.in_game = False
     return x.status_code == 200
     
 #Starts game
@@ -96,12 +97,15 @@ class GameState():
         return self.players.keys()
 
     def update(self, json_text):
+
+        self.in_game = True
+        
         j = json.loads(json_text)
         game_data = j["game_data"]
         self.game_code = game_data["code"]
         self.players = game_data["players"]
         self.round = game_data["round"]
-        
+
 
 
         

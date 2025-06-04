@@ -10,7 +10,7 @@ FONT = pygame.font.SysFont("centurygothic", 48)
 BUTTON_FONT = pygame.font.SysFont("centurygothic", 28)
 INPUT_FONT  = pygame.font.SysFont("centurygothic", 32)
 TITLE_FONT = pygame.font.SysFont("centurygothic",72)
-
+TIMER_FONT = pygame.font.SysFont("centurygothic", 24)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
