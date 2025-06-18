@@ -41,13 +41,18 @@ points_label_pos = SIDE_X,100
 points_surface = None
 points_pos = SIDE_X,130
 
+def make_guess(game):
+    import Word_Check.word_check as wc
+    guess = word_text.lower()
+    game.points =  int(10 + wc.find_cat_similarity(word_text) * 100) if wc.check_word_valid(guess) and prompt.check_word(guess) else 0
+    return "between"
+
 def get_time_left(game):
     now = pg.time.get_ticks()
     elapsed = (now-start_time)/1000
     return max(game.game.round["length"] - elapsed,0)
 
-def draw(game, screen):
-
+def draw_sidebar(game, screen):
     pg.draw.rect(screen,WHITE,sidebar_rect)
 
     screen.blit(time_label_surface,time_label_pos)
@@ -61,6 +66,11 @@ def draw(game, screen):
 
     screen.blit(points_label_surface,points_label_pos)
     screen.blit(points_surface, points_pos)
+    
+
+def draw(game, screen):
+
+    draw_sidebar(game, screen)
     
     button_color_to_use = WHITE if not leave_button_rect.collidepoint(
         pg.mouse.get_pos()) else HOVER
@@ -109,21 +119,19 @@ def update(game, events):
     
     time_left = get_time_left(game)
     if time_left<=0:
-        pass
+        return make_guess(game)
     for event in events:
         if event.type == pg.MOUSEBUTTONDOWN:
             if leave_button_rect.collidepoint(event.pos):
                 leave(game.game, game.userid)
                 return "main_menu"
             elif button_rect.collidepoint(event.pos):
-                pass
-                #make a guess
+                return make_guess(game)
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_BACKSPACE:
                 word_text = word_text[:-1]
             elif event.key == pg.K_RETURN:
-                pass
-                #make a guess
+                return make_guess(game)
             elif event.unicode and event.unicode.isprintable():
                 letter = event.unicode.upper()
                 if letter >= 'A' and letter <= 'Z':
