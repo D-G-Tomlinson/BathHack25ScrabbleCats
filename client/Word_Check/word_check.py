@@ -13,7 +13,7 @@ f = open("Word_Check/closeness.json", "r")
 dictionary = json.load(f)
 f.close()
 
-print("length is",len(dictionary))
+#print("length is",len(dictionary))
 
 def check_word_valid(word):
     return (word.lower() in dictionary)

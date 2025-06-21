@@ -35,7 +35,6 @@ def join(game_code, userid,game):
         game.update(x.text)
         return True
     else:
-        print(x.text)
         return x.text.splitlines()[4][3:-4]
 
 def leave(game, userid):
@@ -51,7 +50,7 @@ def start_game(game_code,game):
 
 #Submit guess
 def submit_guess(game_code, userid, roundid, score, game):
-    x = requests.patch(url+"game/game_code="+str(game_code)+"&userid="+userid+"&round="+str(roundid)+"&score="+str(score))
+    x = requests.patch(url+"game/guess?game_code="+str(game_code)+"&userid="+userid+"&round="+str(roundid)+"&score="+str(score))
     game.update(x.text)
 
 #Do this every second or so to check game state
@@ -99,12 +98,15 @@ class GameState():
     def update(self, json_text):
 
         self.in_game = True
-        
-        j = json.loads(json_text)
-        game_data = j["game_data"]
-        self.game_code = game_data["code"]
-        self.players = game_data["players"]
-        self.round = game_data["round"]
+        try:
+            j = json.loads(json_text)
+            game_data = j["game_data"]
+            self.game_code = game_data["code"]
+            self.players = game_data["players"]
+            self.round = game_data["round"]
+        except:
+            print(json_text)
+            raise NotImplementedError
 
 
 

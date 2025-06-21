@@ -1,6 +1,9 @@
 import pygame as pg
 from pygame.mixer import music as music
 from backend_handler import GameState, leave
+
+import traceback
+
 # init pygame
 pg.init()
 pg.mixer.init()
@@ -13,6 +16,7 @@ import States.generate_game_code as ggc
 import States.join_game as jg
 import States.lobby as lb
 import States.make_guess as mg
+import States.between as bt
 
 class Game:
     def __init__(self):
@@ -34,7 +38,8 @@ states = {"main_menu":mm.functions,
           "generate_game_code":ggc.functions,
           "join_game":jg.functions,
           "lobby":lb.functions,
-          "make_guess":mg.functions
+          "make_guess":mg.functions,
+          "between":bt.functions
           }
 state = "main_menu"
 
@@ -44,7 +49,7 @@ def update(state):
         if event.type == pg.QUIT:
             if game.game.in_game:
                 leave(game.game,game.userid)
-            pygame.quit()
+            pg.quit()
             sys.exit()
     update_func = states[state][0]
     new_state = update_func(game, events)
@@ -59,5 +64,10 @@ def draw(state):
     pg.display.flip()
 
 while True:
-    state = update(state)
-    draw(state)
+    try:
+        state = update(state)
+        draw(state)
+    except Exception:
+        traceback.print_exc()
+        pg.quit()
+        sys.exit()

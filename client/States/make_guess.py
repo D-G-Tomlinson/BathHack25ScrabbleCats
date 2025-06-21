@@ -4,8 +4,6 @@ from backend_handler import submit_guess, leave
 import Rules.rules as rules
 from math import ceil
 
-SIDEBAR_WIDTH = 100
-
 start_time = 0 
 prompt = None
 
@@ -30,6 +28,8 @@ leave_button_rect = pg.Rect(10,10,100,50)
 leave_button_text = BUTTON_FONT.render("Leave", True, BLACK)
 leave_button_text_rect = leave_button_text.get_rect(center=leave_button_rect.center)
 
+R_NUM_POS = (WIDTH/2,30)
+
 SIDE_X = WIDTH - sidebar_rect.width + 10
 
 time_label_surface = TIMER_FONT.render("Time left:", True, BLACK)
@@ -44,7 +44,8 @@ points_pos = SIDE_X,130
 def make_guess(game):
     import Word_Check.word_check as wc
     guess = word_text.lower()
-    game.points =  int(10 + wc.find_cat_similarity(word_text) * 100) if wc.check_word_valid(guess) and prompt.check_word(guess) else 0
+    game.last_score =  int(10 + wc.find_cat_similarity(word_text) * 100) if wc.check_word_valid(guess) and prompt.check_word(guess) else 0
+    submit_guess(game.game.game_code,game.userid,game.game.round["num"],game.last_score,game.game)
     return "between"
 
 def get_time_left(game):
@@ -92,6 +93,11 @@ def draw(game, screen):
     
     pg.draw.rect(screen, HOVER, word_box)
 
+    r_num = game.game.round["num"]
+    r_num_surface = TITLE_FONT.render(f"Round {r_num}",True,BLACK)
+    r_num_rect = r_num_surface.get_rect(center=R_NUM_POS)
+    screen.blit(r_num_surface,r_num_rect)
+    
     word_surface = INPUT_FONT.render(word_text, True, BLACK)
     screen.blit(word_surface,
                 (word_box.x+5,

@@ -5,7 +5,7 @@ import datetime
 import rules
 
 MAX_ROUNDS = 10
-BETWEEN = 5
+BETWEEN = 10
 class Round:
     length = 15
     def __init__(self,prev_val):
@@ -161,7 +161,7 @@ def get_update():
     r = g.r
     if r!=None:
         if r.finished!=None:
-            if (datetime.datetime.now()-r.finished).total_seconds()>5:
+            if (datetime.datetime.now()-r.finished).total_seconds()>BETWEEN:
                 g.r = Round(r.num)
         elif r.rule==None and r.num==None:
             userid = request.args.get("userid")
