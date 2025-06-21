@@ -127,7 +127,7 @@ def update(game, events):
     for event in events:
         if event.type == pg.MOUSEBUTTONDOWN:
             if leave_button_rect.collidepoint(event.pos):
-                leave(game.game.game_code, game.userid)
+                leave(game.game_code, game.userid)
                 return "main_menu"
     return "between"
 def init(game):
