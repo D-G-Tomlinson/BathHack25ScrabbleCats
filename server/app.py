@@ -5,7 +5,7 @@ import datetime
 import rules
 
 MAX_ROUNDS = 10
-BETWEEN = 5
+BETWEEN = 10
 class Round:
     length = 15
     def __init__(self,prev_val):
@@ -20,7 +20,7 @@ class Round:
     def finish(self):
         self.finished=datetime.datetime.now()
     def ready_j(self):
-        fin = self.finished != None
+        fin = (self.finished != None)
         return {"rule":self.rule,"num":self.num,"length":Round.length,"finished":fin}
 
 games = {}
@@ -68,18 +68,18 @@ class Game:
     def player_finished(self,player):
         if player in self.player_scores:
             self.player_scores[player]=(self.player_scores[player][0],-1)
-            if self.test_all_players(-1):
-                games.pop(self.code)
-        else:
+        if self.test_all_players(-1):
+            games.pop(self.code)
+        if player != None:
             abort(403, description="that player don't exist lol")
     
 def get_game(game_code):
     try:
         game_code = int(game_code)
     except:
-        abort(403,description="thats not an integer")
+        abort(403,description="That is not an integer")
     if game_code not in games:
-        abort(403, description="that game doesn't exist")
+        abort(403, description="That game does not exist")
     return games[game_code]
     
         
@@ -107,8 +107,10 @@ def remove_player():
     g = get_game(request.args.get("game_code"))
     userid = str(request.args.get("userid"))
     if userid not in g.player_scores:
-        abort(403, description="youre not in")
+        abort(403, description="you are not in")
     g.player_scores.pop(userid)
+    if g.test_all_players(g.r.num+1):
+        g.next_round(None)
     if len(g.player_scores)==0:
         games.pop(g.code)
     return "Success",200
@@ -136,19 +138,22 @@ def join_game():
     g = get_game(request.args.get("game_code"))
     userid = str(request.args.get("userid"))
     if g.r!=None:
-        abort(403, description="game is running")
+        abort(403, description="The game is running")
     if userid in g.player_scores:
-        abort(403, description="youre already in")
+        abort(403, description="You are already in")
     if len(g.player_scores)>=5:
-        abort(403, description="too many in lobby")
-    g.player_scores[userid]=0
-    return "Success",200
+        abort(403, description="There are too many in the lobby")
+    g.player_scores[userid]=(0,1)
+    return jsonify({"game_data":g.ready_j()}),200
 
 @app.patch('/game/start')
 def start_game():
     g = get_game(request.args.get("game_code"))
-    g.start()
-    return jsonify({"game_data":g.ready_j()}),200
+    if g.r == None:
+        g.start()
+        return jsonify({"game_data":g.ready_j()}),200
+    else:
+        abort(403,description="Game has already started")
 
 @app.get('/game/arewethereyet')
 def get_update():
@@ -156,7 +161,7 @@ def get_update():
     r = g.r
     if r!=None:
         if r.finished!=None:
-            if (datetime.datetime.now()-r.finished).total_seconds()>5:
+            if (datetime.datetime.now()-r.finished).total_seconds()>BETWEEN:
                 g.r = Round(r.num)
         elif r.rule==None and r.num==None:
             userid = request.args.get("userid")
@@ -169,6 +174,6 @@ def new_game():
     if userid == None:
         abort(400, description="no userid provided")
     ng = Game(userid)
-    code = ng.code
+    code=ng.code
     games[code]=ng
-    return jsonify({"gameCode":code}),201
+    return jsonify({"game_data":ng.ready_j()}),201
