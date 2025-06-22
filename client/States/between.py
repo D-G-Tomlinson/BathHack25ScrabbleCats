@@ -26,7 +26,7 @@ class Response:
             
 response = None
 over_surface = TITLE_FONT.render("Game Complete",True,BLACK)
-over_pos = WIDTH/2,HEIGHT-50
+over_pos = WIDTH/2-80,HEIGHT-50
             
 time = 0
 
@@ -65,6 +65,10 @@ def draw_names(userid, players, screen):
         text_surface = INPUT_FONT.render(f"{name} - {score} pts", True, BLACK)
         text_rect = text_surface.get_rect(midleft=pos)
         screen.blit(text_surface, text_rect)
+    screen.blit(finished_surface,finished_pos)
+    if y2 != WAIT_Y:
+        screen.blit(wait_surface,wait_pos)
+
 
 # Text wrapping function
 def wrap_text(text, font, max_width):
@@ -88,8 +92,6 @@ def draw(game, screen):
     screen.blit(leave_button_text, leave_button_text_rect)
 
     pg.draw.rect(screen,WHITE,sidebar_rect)
-    screen.blit(finished_surface,finished_pos)
-    screen.blit(wait_surface,wait_pos)
     draw_names(game.userid,game.game.players,screen)
 
     if is_game_over:
@@ -109,7 +111,11 @@ def draw(game, screen):
 
     
 def update(game, events):
-    global is_game_over    
+    global is_game_over
+    current_r = game.game.round["num"]
+    if current_r==None:
+        is_game_over = True
+
     if not is_game_over:
         global time
         current_time = pg.time.get_ticks()
@@ -118,16 +124,13 @@ def update(game, events):
             time = current_time
             next_round = game.game.players[game.userid][1]
 #            print(f"next round is {next_round}")
-            current_r = game.game.round["num"]
  #           print(f"current round is {current_r}")
             if current_r==next_round:
                 return "make_guess"
-            elif current_r==None:
-                is_game_over = True
     for event in events:
         if event.type == pg.MOUSEBUTTONDOWN:
             if leave_button_rect.collidepoint(event.pos):
-                leave(game.game_code, game.userid)
+                leave(game.game, game.userid)
                 return "main_menu"
     return "between"
 def init(game):
